@@ -1,5 +1,4 @@
 exports.handler =  function(event, context, callback) {
-    // TODO implement
     var AWS = require("aws-sdk");
     var allShops = [];
    
