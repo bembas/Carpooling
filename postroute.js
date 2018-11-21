@@ -1,8 +1,8 @@
 exports.handler =  function(event, context, callback) {
    
-   var allroutes = [];
-    var AWS = require("aws-sdk");
    
+    var AWS = require("aws-sdk");
+    var UUID = require('uuid');
    
     AWS.config.update({
         region:"eu-west-3"
@@ -12,26 +12,27 @@ exports.handler =  function(event, context, callback) {
     
     console.log("Scaning Data dynamodb...");
     
- 
+    console.log("UUID "+ UUID.v1());
     var params = {
-        TableName : "Routes"
+        TableName : "Routes",
+        Item :{
+            "id" : UUID.v1(),
+            "destination":event.destination,
+            "available_seats": event.available_seats
+        }
     };
  
-    docClient.scan(params , onPost);
+    docClient.put(params , onPost);
 
     function onPost(err,data){
         if (err) {
             console.error("Unable to post!" + JSON.stringify(err,null,2));
         } else {
-             data.Items.forEach(function(route){
-                  allroutes.push(route);
-             });
-             
-             callback(null, allroutes);
+            console.log(data);
         }
             
    }
 
 
-
+    callback(null, "Done");
 };
